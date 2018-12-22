@@ -59,10 +59,10 @@ int yla_stack_pull(yla_stack* stack, yla_int_type *result)
 int yla_stack_set_deep(yla_stack* stack, size_t index, yla_int_type value)
 {
     if (stack->count == 0) {
-        return 0;
+        return -10;
     }
     if (index >= stack->count) {
-        return 0;
+        return -20;
     }
     stack->ptr[stack->count-index-1] = value;
     return 1;
@@ -71,10 +71,10 @@ int yla_stack_set_deep(yla_stack* stack, size_t index, yla_int_type value)
 int yla_stack_get_deep(yla_stack* stack, size_t index, yla_int_type *result)
 {
     if (stack->count == 0) {
-        return 0;
+        return -10;
     }
     if (index >= stack->count) {
-        return 0;
+        return -20;
     }
     *result = stack->ptr[stack->count-index-1];
     return 1;
@@ -87,6 +87,15 @@ int yla_stack_top(yla_stack* stack, yla_int_type *result)
     }
     *result = stack->ptr[stack->count-1];
     return 1;
+}
+
+int yla_stack_tail_delete(yla_stack* stack, yla_int_type tail_size)
+{
+	if (stack->count < tail_size) {
+		return 0;
+	}
+	stack->count -= tail_size;
+	return 1;
 }
 
 int yla_stack_is_empty(yla_stack* stack)

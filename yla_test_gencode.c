@@ -55,3 +55,45 @@ void put_header(yla_cop_type** prg, size_t stack_size, size_t vartable_size, siz
     put_value(prg, vartable_size);
     put_value(prg, code_size);
 }
+
+int link_program(yla_cop_type *prog_ptr, yla_int_type prog_counter, compliance_table *link_table)
+{
+	for (int i = 0; i < 12; i++) {
+		yla_cop_type emptiness = (prog_ptr + i);	// skip header
+		*(prog_ptr)++;
+	}
+	for (int i = 12; i < prog_counter + 12; i++) {
+		if (i != (prog_counter + 12 - 1)) { 
+			yla_cop_type value = *(prog_ptr);
+			if ((value == CALO)		||
+					(value == CJMP)	||
+					(value == CJZ)		||
+					(value == CJNZ)	||
+					(value == CJE)		||
+					(value == CJNE) ||
+					(value == CJG)
+			) {
+				yla_int_type op1 = *(prog_ptr + 1);
+				yla_int_type op2 = *(prog_ptr + 2);
+				
+				yla_int_type mark = ((yla_int_type)op1 << 8) + (yla_int_type)op2;
+				
+				yla_int_type addr = compliance_table_get_addr(link_table, mark);
+				
+				yla_cop_type high_byte = addr >> 8;
+				yla_cop_type low_byte = addr - (high_byte << 8);
+					
+				(prog_ptr) - 2;
+				*(prog_ptr + 1) = high_byte;
+				*(prog_ptr + 2) = low_byte;
+				(prog_ptr) + 2;
+			}
+			
+			*(prog_ptr)++;
+		} else { 
+			break;	
+		}
+	}
+	
+	return 1;
+}

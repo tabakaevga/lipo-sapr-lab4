@@ -14,7 +14,7 @@
 #    along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 
 CC     = gcc
-CFLAGS =
+CFLAGS = -w -std=c99
 
 LN     = gcc
 LNFLAGS=
@@ -26,6 +26,8 @@ TESTEXE=tests
 
 OBJ=\
 yla_stack.o\
+yla_compliance.o\
+yla_diapason.o\
 yla_vm.o
 
 MAINOBJ=yla_vm_main.o
